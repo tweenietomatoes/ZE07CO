@@ -1,22 +1,21 @@
-#include <ZE07CO.h>
 #include <SoftwareSerial.h>
+#include <ZE07CO.h>
 
-SoftwareSerial Serial2(6,7);
+SoftwareSerial sensorSerial(6, 7); // RX, TX
 
-ZE07CO ze07co;
+ZE07CO sensor(sensorSerial);
 
-void setup()
-{
-ze07co.begin(&Serial2);
-Serial.begin(9600);
+void setup() {
+  Serial.begin(9600);
+  sensorSerial.begin(9600);
 }
 
-void loop()
-{
-Serial.println(ze07co.readCO());
-              //Default mode is active, if you want to switch mode
-              //ze07co.setMode(1) ,then you need to request first
-              //ze07co.requestCO() and then readCO();
-              //
-delay(1000);
+void loop() {
+  float ppm = sensor.readCO();
+  if (ppm >= 0) {
+    Serial.print("CO: ");
+    Serial.print(ppm, 1);
+    Serial.println(" ppm");
+  }
+  delay(1000);
 }
